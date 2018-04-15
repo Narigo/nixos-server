@@ -2,6 +2,9 @@
 
 set -e
 
+# set the channel to use for the server
+CHANNEL=18.03
+
 cat <<END
 Hi there!
 
@@ -31,3 +34,32 @@ echo
 echo -n "Starting OpenSSH server ..."
 systemctl start sshd
 echo " done!"
+
+# nixos switch configuration and enable the SSH server
+CONFIGURATION_NIX=$(cat <<END_OF_FILE
+{ config, pkgs, ... }:
+
+{
+  imports = [ ./base-installation.nix ./custom.nix ];
+}
+END_OF_FILE
+)
+
+# nixos switch configuration and enable the SSH server
+CUSTOM_CONFIGURATION_NIX=$(cat <<END_OF_FILE
+{ config, pkgs, ... }:
+
+{ services.sshd.enable = true;
+  services.sshd.permitRootLogin = yes;
+}
+END_OF_FILE
+)
+
+echo "$CUSTOM_CONFIGURATION_NIX" > /etc/nixos/custom.nix
+if [ ! -e /etc/nixos/base-installation.nix ]; then
+  mv -n /etc/nixos/configuration.nix /etc/nixos/base-installation.nix
+  echo "$CONFIGURATION_NIX" > /etc/nixos/configuration.nix
+  echo "Configuration changed."
+else
+  echo "Not touching configuration."
+fi
