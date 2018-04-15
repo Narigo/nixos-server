@@ -2,9 +2,6 @@
 
 set -e
 
-# set the channel to use for the server
-CHANNEL=18.03
-
 cat <<END
 Hi there!
 
