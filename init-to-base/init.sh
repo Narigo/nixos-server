@@ -46,17 +46,22 @@ END_OF_FILE
 CUSTOM_CONFIGURATION_NIX=$(cat <<END_OF_FILE
 { config, pkgs, ... }:
 
-{ services.sshd.enable = true;
-  services.sshd.permitRootLogin = yes;
+{ services.openssh.enable = true;
+  services.openssh.permitRootLogin = pkgs.lib.mkForce "yes";
+
+  systemd.services.sshd.wantedBy = pkgs.lib.mkOverride 40 [ "multi-user.target" ];
 }
 END_OF_FILE
 )
 
-echo "$CUSTOM_CONFIGURATION_NIX" > /etc/nixos/custom.nix
 if [ ! -e /etc/nixos/base-installation.nix ]; then
   mv -n /etc/nixos/configuration.nix /etc/nixos/base-installation.nix
   echo "$CONFIGURATION_NIX" > /etc/nixos/configuration.nix
   echo "Configuration changed."
 else
-  echo "Not touching configuration."
+  echo "Not touching base configuration."
 fi
+
+echo "$CUSTOM_CONFIGURATION_NIX" > /etc/nixos/custom.nix
+
+nixos-rebuild switch
