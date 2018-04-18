@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+(
 set -e
 
 CHANNEL=18.03
@@ -19,3 +20,5 @@ rm .custom.nix.tmp
 ssh "$USERNAME@$SERVER_IP" -i "$SSH_KEY_FILE" "sudo cat - > /etc/nixos/nextcloud.nix && nixos-rebuild switch" < nextcloud.nix
 
 # TODO: Set password of user
+
+)
