@@ -18,7 +18,7 @@ root		ALL = (ALL) ALL
     home = "/home/$USERNAME$";
     description = "$USERNAME$";
     extraGroups = [ "sudoers" "wheel" ];
-    openssh.authorizedKeys.keys = [ "$SSH_KEY$" ];
+    openssh.authorizedKeys.keys = [ "$SSH_AUTHORIZED_KEY$" ];
   };
 
 }
