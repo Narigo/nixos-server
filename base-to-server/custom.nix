@@ -1,24 +1,30 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ "./nextcloud.nix" ];
+  # imports = [ ./docker.nix ];
   services.sshd.enable = true;
-  services.sshd.permitRootLogin = pkgs.lib.mkOverride 40 "no";
+  services.openssh.permitRootLogin = pkgs.lib.mkForce "no";
 
-  systemd.services.sshd.wantedBy = pkgs.lib.mkOverride 40 [ "multi-user.target" ];
+  systemd.services.sshd.wantedBy = [ "multi-user.target" ];
 
-  security.sudo.enable = true;
+  security.sudo.enable = pkgs.lib.mkForce true;
   security.sudo.configFile = ''
 root		ALL = (ALL) ALL
 %wheel		ALL = (ALL) ALL
 '';
 
-  users.users.$USERNAME$ = {
-    isNormalUser = true;
-    home = "/home/$USERNAME$";
-    description = "$USERNAME$";
-    extraGroups = [ "sudoers" "wheel" ];
-    openssh.authorizedKeys.keys = [ "$SSH_AUTHORIZED_KEY$" ];
+  virtualisation.docker.enable = true;
+
+  users = {
+    mutableUsers = false;
+
+    users.$USERNAME$ = {
+      isNormalUser = true;
+      home = "/home/$USERNAME$";
+      description = "$USERNAME$";
+      extraGroups = [ "sudoers" "wheel" "docker" ];
+      openssh.authorizedKeys.keys = [ "$SSH_AUTHORIZED_KEY$" ];
+    };
   };
 
 }
