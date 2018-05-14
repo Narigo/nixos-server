@@ -14,6 +14,9 @@ root		ALL = (ALL) ALL
 '';
 
   virtualisation.docker.enable = true;
+  environment.systemPackages = with pkgs; [
+    docker_compose
+  ];
 
   users = {
     mutableUsers = false;

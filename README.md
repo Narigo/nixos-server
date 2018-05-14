@@ -17,4 +17,17 @@ means setting up the complete system through SSH.
 
 ## Set up the server through SSH
 
-Run the `create-server.sh` script to set up the user and add the users SSH key.
+On the RaspberryPi, you might want to run a server. The easiest way to do so is to dockerize everything and run docker.
+
+1. Run the `create-server.sh` script to set up the user and add the users SSH key.
+2. Run the necessary docker commands.
+
+### Setting up nginx server + Let's Encrypt + NextCloud
+
+```
+# TODO document commands to start nextcloud, postgresql, letsencrypt and nginx server
+```
+
+### Setting up automatic backups
+
+TBD
