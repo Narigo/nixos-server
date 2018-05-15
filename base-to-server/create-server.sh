@@ -34,6 +34,8 @@ scp "$ABS_PATH/tmp-files/"* "root@$SERVER_IP:/etc/nixos/"
 ssh "root@$SERVER_IP" "$mvstring && nixos-rebuild switch && passwd -d root && echo done"
 rm -rf "$ABS_PATH/tmp-files"
 
+scp -r "$ABS_PATH/nextcloud-docker" "$USERNAME@$SERVER_IP:/home/$USERNAME/"
+
 # TODO: Set password of user
 
 )

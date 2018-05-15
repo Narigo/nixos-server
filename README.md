@@ -20,11 +20,30 @@ means setting up the complete system through SSH.
 On the RaspberryPi, you might want to run a server. The easiest way to do so is to dockerize everything and run docker.
 
 1. Run the `create-server.sh` script to set up the user and add the users SSH key.
-2. Run the necessary docker commands.
+2. `cd nextcloud-docker`
+3. Run the necessary docker commands.
 
-### Setting up nginx server + Let's Encrypt + NextCloud
+### Setting up nginx server + NextCloud
 
 ```
+# create a volume for NextClouds App / Config
+docker volume create --name nextcloud -o type=none -o device=/my/path/nextcloud -o o=bind
+# create a volume for PostgreSQL databases
+docker volume create --name db -o type=none -o device=/my/path/db -o o=bind
+
+# Start PostgreSQL
+POSTGRES_DB="" POSTGRES_USER="" POSTGRES_PASSWORD="" POSTGRES_HOST="" docker run -d --name db --hostname db -v db:/var/lib/postgresql/data postgres
+
+# Start NextCloud with the volume mounted
+docker run -d --name nextcloud --hostname nextcloud --link db -v nextcloud:/var/www/html nextcloud:fpm
+
+# Build nginx
+docker build -t nginx ./web
+
+# Start nginx with NextCloud linked
+docker run -d --name nginx --hostname nginx --link nextcloud -v nextcloud:/var/www/html nginx
+```
+
 # TODO document commands to start nextcloud, postgresql, letsencrypt and nginx server
 ```
 
